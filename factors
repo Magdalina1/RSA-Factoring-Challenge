@@ -1,40 +1,37 @@
-#include <stdio.h>
+#!/usr/bin/python3
+"""Module that factorizes as many numbers as possible into
+a product of two smaller numbers."""
+from sys import argv
 
-/**
- * factorize_numbers - Factorize numbers in a file
- * @file_path: The path to the file containing the numbers
- */
 
-void factorize_numbers(const char *file_path) {
-	FILE *file = fopen(file_path, "r");
-	if (!file) {
-		perror("File open error");
-		return;
-	}
+def factorize(value):
+    """Print a simple decomposition of an integer > 1"""
+    i = 2
 
-	char line[100];
-	while (fgets(line, sizeof(line), file)) {
-		int n = atoi(line);
-		int p = 2;
-		while (p * p <= n) {
-			if (n % p == 0) {
-				int q = n / p;
-				printf("%d=%d*%d\n", n, p, q);
-				break;
-			}
-			p++;
-		}
-	}
+    if value < 2:
+        return
 
-	fclose(file);
-}
+    print()
+    print(value, "<- value-bef")
+    while value % i:
+        i += 1
+    print("{:.0f}={:.0f}*{:.0f}".format(value, value / i, i))
+    print(value, "<- value-aft")
+    print()
 
-int main(int argc, char *argv[]) {
-	if (argc != 2) {
-		fprintf(stderr, "Usage: factors <file>\n");
-		return 1;
-	}
 
-	factorize_numbers(argv[1]);
-	return 0;
-}
+if len(argv) != 2:
+    exit()
+
+try:
+    with open(argv[1]) as file:
+        line = file.readline()
+
+        while line != "":
+            value = int(line.split('\n')[0])
+            factorize(value)
+            line = file.readline()
+except FileNotFoundError:
+    print("File not found.")
+except Exception as e:
+    print(f"An error occurred: {e}")
