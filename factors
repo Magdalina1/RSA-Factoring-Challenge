@@ -1,32 +1,40 @@
-#!/usr/bin/python3
+#include <stdio.h>
 
-import sys
+/**
+ * factorize_numbers - Factorize numbers in a file
+ * @file_path: The path to the file containing the numbers
+ */
 
+void factorize_numbers(const char *file_path) {
+	FILE *file = fopen(file_path, "r");
+	if (!file) {
+		perror("File open error");
+		return;
+	}
 
-# fn unpack number factorial
-def fc():
-    """
-    function fc to search file to convert number and format n=p*q
-    """
-    try:
-        revfile = sys.argv[1]
-        with open(revfile) as f:
-            for revnumber in f:
-                revnumber = int(revnumber)
-                if revnumber % 2 == 0:
-                        print("{}={}*{}".format(revnumber, revnumber // 2, 2))
-                        continue
-                i = 3
-                while i < revnumber // 2:
-                    if revnumber % i == 0:
-                        print("{}={}*{}".format(revnumber, revnumber // i, i))
-                        break
-                    i = i + 2
-                if i == (revnumber // 2) + 1:
-                    print("{}={}*{}".format(revnumber, revnumber, 1))
-    except (IndexError):
-        pass
+	char line[100];
+	while (fgets(line, sizeof(line), file)) {
+		int n = atoi(line);
+		int p = 2;
+		while (p * p <= n) {
+			if (n % p == 0) {
+				int q = n / p;
+				printf("%d=%d*%d\n", n, p, q);
+				break;
+			}
+			p++;
+		}
+	}
 
+	fclose(file);
+}
 
-# autostart
-fc()
+int main(int argc, char *argv[]) {
+	if (argc != 2) {
+		fprintf(stderr, "Usage: factors <file>\n");
+		return 1;
+	}
+
+	factorize_numbers(argv[1]);
+	return 0;
+}
